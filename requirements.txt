@@ -1,0 +1,14 @@
+git+https://github.com/Rapptz/discord.py@master
+git+git://github.com/Axelancerr/discord-ext-alternatives.git#egg=discord-ext-alternatives
+asyncio
+psutil
+pytz
+timeago==1.0.13
+humanize
+yarl<1.2
+qrcode==6.1
+import fuzzywuzzy.process
+python-Levenshtein
+discord
+pendulum
+

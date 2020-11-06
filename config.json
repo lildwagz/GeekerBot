@@ -1,0 +1,22 @@
+{
+    "token": "(your bot token)",
+    "join_message": "Hello world! 🌟",
+    "antiSpam": true,
+    "automod" : false,
+    "owners": [
+        622741208313102336
+    ],
+    "prefix": [
+        "g!"
+    ],
+    "activity": "prefix g!,yewwhaoo",
+    "activity_type": "playing|watching|listening|competing",
+    "status_type": "online|idle|dnd",
+    "version": "1.0.0",
+    "playing": "prefix g!,yewwhaoo",
+    "allowSpam": [
+        0,
+        771219610937851904
+    ],
+    "logChannel": 0
+}
