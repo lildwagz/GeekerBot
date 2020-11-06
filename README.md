@@ -8,3 +8,8 @@
  
 This bot is a Heavy Coded, reliable, smooth, automatic mod, genius bot, and it also can protect your discord server 
 from any kind of spamming and bad behavior.
+
+
+
+#collaboration
+If you want to collaborate to build or develop this bot, you can join to our discord and dm me for collaboration.
