@@ -20,17 +20,10 @@ class SettingsCog(commands.Cog, name="settings command"):
 
         with open("config.json", "r") as config:
             data = json.load(config)
-            captcha = data["captcha"]
-            captchaChannel = data["captchaChannel"]
-            logChannel = data["logChannel"]
-            temporaryRole = data["temporaryRole"]
-            roleGivenAfterCaptcha = data["roleGivenAfterCaptcha"]
-            minAccountAge = data["minAccountDate"]
             antispam = data["antiSpam"]
             automod = data["automod"]
             allowSpam = data["allowSpam"]
 
-            minAccountAge = int(minAccountAge / 3600)
 
             allowSpam2 = ""
             if len(allowSpam) == 0:
@@ -39,8 +32,7 @@ class SettingsCog(commands.Cog, name="settings command"):
                 for x in allowSpam:
                     allowSpam2 = f"{allowSpam2}<#{x}>, "
 
-            if roleGivenAfterCaptcha != False:
-                roleGivenAfterCaptcha = f"<@&{roleGivenAfterCaptcha}>"
+
 
         embed = discord.Embed(title=f"**SERVER SETTINGS**", description=f"[**DISCORD**](https://discord.gg/EZN4gnk)",
                               color=0xdeaa0c)
@@ -56,7 +48,6 @@ class SettingsCog(commands.Cog, name="settings command"):
         return await ctx.channel.send(embed=embed)
 
 
-# ------------------------ BOT ------------------------ #  
 
 def setup(bot):
     bot.add_cog(SettingsCog(bot))
