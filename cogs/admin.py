@@ -14,13 +14,13 @@ class Admin(commands.Cog, name="admin"):
 
     @commands.group()
     @commands.check(permissions.is_owner)
-    async def dm(self, ctx, user_id: int, *, message: str):
-        user = self.bot.get_user(user_id)
-        if not user:
+    async def dm(self, ctx, user_id: discord.Member, *, message: str):
+        # user = self.bot.get_user(user_id)
+        if user_id is None:
             return await ctx.send(f"Could not find any UserID matching **{user_id}**")
 
         try:
-            await user.send(message)
+            await user_id.send(message)
             await ctx.send(f"✉️ Sent a DM to **{user_id}**")
         except discord.Forbidden:
             await ctx.send("This user might be having DMs blocked or it's a bot account...")
