@@ -11,5 +11,5 @@ from any kind of spamming and bad behavior.
 
 
 
-#collaboration
+# collaboration
 If you want to collaborate to build or develop this bot, you can join to our discord and dm me for collaboration.
