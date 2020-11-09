@@ -64,7 +64,7 @@ class AllowSpamCog(commands.Cog, name="allow spam command"):
                     embed = discord.Embed(title=f"**ERROR**",
                                           description=f"The channel where you want to disable the spam is already disabled.",
                                           color=0xe00000)  # Red
-                    embed.set_footer(text="Bot Created by Darkempire#8245")
+                    embed.set_footer(text="Bot Created by Zaam")
                     return await ctx.channel.send(embed=embed)
 
                 data["allowSpam"].remove(spamChannel.id)
