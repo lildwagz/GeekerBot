@@ -60,8 +60,6 @@ class HelpCog(commands.Cog, name="help command"):
         page1.set_footer(text=f"Bot Created by {self.author.owners}")
 
         # --------------------page1------------------------------------------------------------------#
-
-        # await ctx.channel.send(embed=page1)
         page2 = discord.Embed(title=f"__**Help page of {self.bot.user.name}**__",
                               description="[**DISCORD**](https://discord.gg/EZN4gnk)", color=0xdeaa0c)
         page2.set_thumbnail(url=f'{self.bot.user.avatar_url}')
