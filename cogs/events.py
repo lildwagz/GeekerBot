@@ -1,3 +1,6 @@
+import json
+import random
+
 import discord
 import psutil
 import os
@@ -6,6 +9,10 @@ import asyncio
 from datetime import datetime
 from discord.ext import commands
 from discord.ext.commands import errors
+
+from cogs import allowSpam
+from cogs.func import CaptchaMaker
+from cogs.mod2 import color_list
 from utils import default, lists
 
 
@@ -71,11 +78,9 @@ class Events(commands.Cog):
         if not hasattr(self.bot, 'uptime'):
             self.bot.uptime = datetime.utcnow()
 
-        # Check if user desires to have something other than online
         status = self.config.status_type.lower()
         status_type = {"idle": discord.Status.idle, "dnd": discord.Status.dnd}
 
-        # Check if user desires to have a different type of activity
         activity = self.config.activity_type.lower()
         activity_type = {"listening": 2, "watching": 3, "competing": 5}
 
@@ -85,24 +90,146 @@ class Events(commands.Cog):
             ),
             status=status_type.get(status, discord.Status.online)
         )
-
         # Indicate that the bot has successfully booted up
         print(f'Ready: {self.bot.user} | Servers: {len(self.bot.guilds)}')
 
+    def load_captchas(self):
+        with open('Databases/captcha/captchas.json') as json_file:
+            return json.load(json_file)
+
+    def save_catchas(self, captchas):
+        with open('Databases/captcha/captchas.json', 'w') as outfile:
+            json.dump(captchas, outfile)
+
     @commands.Cog.listener()
-    async def on_message(self, msg):
-        # if not self.is_ready() or msg.author.bot or not permissions.can_send(msg):
-        #     return
-        for word in lists.badwords:
-            if word in msg.content.lower():
-                message = await msg.channel.send(":arrows_counterclockwise: deleting message...")
-                await asyncio.sleep(1)
-                await msg.delete()
-                await asyncio.sleep(1)
-                await message.edit(content=f":warning: {msg.author.mention} bad words are not allowed in this server"
-                                           " kiddo! :warning:"
-                                   )
-        # await self.process_commands(msg)
+    async def on_message(self, message):
+        with open("config.json", "r") as con:
+            config = json.load(con)
+            antiSpam = config["antiSpam"]
+            allowSpam = config["allowSpam"]
+            antitoxic = config["antitoxic"]
+        if message.author.bot:
+            return
+
+        if antitoxic:
+            for word in lists.badwords:
+                # logChannel = self.bot.get_channel(data["logChannel"])
+                if word in message.content.lower():
+                    message = await message.channel.send(":arrows_counterclockwise: deleting message...")
+                    await asyncio.sleep(1)
+                    await message.delete()
+                    await asyncio.sleep(1)
+                    await message.edit(
+                        content=f":warning: {message.author.mention} bad words are not allowed in this server"
+                                " kiddo! :warning:"
+                        )
+
+        if antiSpam:
+            warnerName = "GeekerBot"
+            warnerId = 772748636554788895
+            color = random.choice(color_list)
+
+            def check(message):
+                return message.author == message.author and (datetime.utcnow() - message.created_at).seconds < 15
+
+            try:
+                if message.author.guild_permissions.administrator:
+                    return
+
+                if message.channel.id in allowSpam:
+                    return
+
+                if len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 4 and len(
+                        list(filter(lambda m: check(m), self.bot.cached_messages))) < 6:
+                    await message.channel.send(f"{message.author.mention} don't do that bruh!")
+                elif len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 7:
+                    dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                    if not os.path.exists("Databases/warns/" + str(message.guild.id) + "/"):
+                        os.makedirs("Databases/warns/" + str(message.guild.id) + "/")
+                    try:
+                        with open(f"Databases/warns/{str(message.guild.id)}/{str(message.author.id)}.json") as f:
+                            data = json.load(f)
+                            warn_amount = data.get("warns")
+                            new_warn_amount = warn_amount + 1
+                            data["warns"] = new_warn_amount
+                            data["offender_name"] = message.author.name
+                            new_warn = ({
+                                'warner': self.bot.user.id,
+                                'warner_name': self.bot.user.name,
+                                'reason': "spamming",
+                                'channel': str(message.channel.id),
+                                'datetime': dt_string
+                            })
+                            data[new_warn_amount] = new_warn
+                            if warn_amount == 3:
+                                reason = "spamming multiple times"
+                                muted_role = next((g for g in message.guild.roles if g.name == "Muted"), None)
+                                try:
+                                    await message.author.add_roles(muted_role, reason=reason)
+                                    await message.channel.send(
+                                        f"<@{message.author.id}> has been muted by <@{warnerId}> for *{reason}*")
+                                except Exception as e:
+                                    await message.channel.send(e)
+                            else:
+                                json.dump(data, open(
+                                    f"Databases/warns/{str(message.guild.id)}/{str(message.author.id)}.json", "w"))
+                                embed = discord.Embed(title=f"{message.author.name}'s new warn", color=color)
+                                embed.add_field(
+                                    name=f"Warn  {new_warn_amount}",
+                                    value=f"Warner: {warnerName} (<@{warnerId}>)\nReason: spamming\nChannel: <#{str(message.channel.id)}>\nDate and Time: {dt_string}",
+                                    inline=True
+                                )
+                                await message.channel.send(
+                                    content="Successfully added new warn.",
+                                    embed=embed
+                                )
+
+                    except FileNotFoundError:
+
+                        with open(f"Databases/warns/{str(message.guild.id)}/{str(message.author.id)}.json", "w") as f:
+                            data = ({
+                                'offender_name': message.author.name,
+                                'warns': 1,
+                                1: ({
+                                    'warner': warnerId,
+                                    'warner_name': warnerName,
+                                    'reason': "spamming",
+                                    'channel': str(message.channel.id),
+                                    'datetime': dt_string
+                                })
+                            })  #
+                            json.dump(data, f)
+                        embed = discord.Embed(title=f"{message.author.name}'s new warn",
+                                              color=random.choice(color_list))
+                        embed.add_field(
+                            name="Warn 1",
+                            value=f"Warner: {warnerName} (<@{warnerId}>)\nReason: Spamming\nChannel: <#{str(message.channel.id)}>\nDate and Time: {dt_string}",
+                            inline=True
+                        )
+                        await message.channel.send(
+                            content="Successfully added new warn.",
+                            embed=embed
+                        )
+                        return
+                    # embed = discord.Embed(
+                    #     title=f"**YOU HAVE BEEN KICKED FROM {message.author.guild.name}**",
+                    #     description=f"Reason : You spammed.", color=0xff0000)
+                    # await message.author.send(embed=embed)
+                    # # await message.author.kick()  # Kick the user
+                    # await message.channel.send(
+                    #     f"{message.author.mention} hell yeah this dude has no chill !")
+            except:
+                pass
+
+    # @commands.Cog.listener()
+    # async def on_member_join(self, member):
+    #     chanel = self.bot.get_channel(773461453851983882)
+    #     captcha_list = self.load_captchas()
+    #     captchaValue = CaptchaMaker.create()
+    #     captcha_list[member.id] = captchaValue
+    #     self.save_catchas(captcha_list)
+    #     file = "captcha_" + captchaValue + ".png"
+    #     await chanel.send(file=discord.File("Databases/captcha/" + file))
 
 
 def setup(bot):
