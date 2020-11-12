@@ -211,13 +211,7 @@ class Events(commands.Cog):
                             embed=embed
                         )
                         return
-                    # embed = discord.Embed(
-                    #     title=f"**YOU HAVE BEEN KICKED FROM {message.author.guild.name}**",
-                    #     description=f"Reason : You spammed.", color=0xff0000)
-                    # await message.author.send(embed=embed)
-                    # # await message.author.kick()  # Kick the user
-                    # await message.channel.send(
-                    #     f"{message.author.mention} hell yeah this dude has no chill !")
+         
             except:
                 pass
 
