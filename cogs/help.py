@@ -3,9 +3,8 @@ import asyncio
 import discord
 
 from discord.ext import commands
-
-from main import bot
 from utils import default
+from utils.pagination import BotEmbedPaginator
 
 
 class HelpCog(commands.Cog, name="help command"):
@@ -16,7 +15,7 @@ class HelpCog(commands.Cog, name="help command"):
     @commands.command(name='help')
     async def help(self, ctx):
         page1 = discord.Embed(title=f"__**Help page of {self.bot.user.name}**__",
-                              description="[**DISCORD**](https://discord.gg/EZN4gnk)", color=0xdeaa0c)
+                                  description="[**DISCORD**](https://discord.gg/EZN4gnk)", color=0xdeaa0c)
         page1.set_thumbnail(url=f'{self.bot.user.avatar_url}')
         page1.add_field(name="__Admin :__",
                         value=f"{self.bot.command_prefix}settings :** Display the list of settings.\n**"
@@ -47,8 +46,18 @@ class HelpCog(commands.Cog, name="help command"):
                               f"{self.bot.command_prefix}roast  :**  Lets GeekerBot insult someone or yourself.\n**"
                               f"{self.bot.command_prefix}gayscanner   :**  See how gAe another user is. Shows my level of maturity too.\n**"
                               f"{self.bot.command_prefix}ship    :**  Test love between two users.\n**"
+                              f"{self.bot.command_prefix}8ball    :**   Consult 8ball to receive an answer.\n**"
+                              f"{self.bot.command_prefix}cat    :**    Posts a random cat.\n**"
+                              f"{self.bot.command_prefix}dog    :**   Posts a random dog.\n**"
+                              f"{self.bot.command_prefix}birb    :**    Posts a random birb.\n**"
+                              f"{self.bot.command_prefix}coffee    :**  Posts a random coffee.\n**"
+                              f"{self.bot.command_prefix}f    :**  Press F to pay respect.\n**"
+                              f"{self.bot.command_prefix}urban    :** Find the 'best' definition to your words .\n**"
+                              f"{self.bot.command_prefix}beer    :** Give someone a beer! 🍻 .\n**"
+                              f"{self.bot.command_prefix}hotcalc    :** Returns a random percent for how hot is a discord user\n**"
+                              f"{self.bot.command_prefix}reverse    :**  !poow ,ffuts esreveR Everything you type after reverse will of course, be reversed\n**"
                         , inline=False)
-        page1.set_footer(text="Bot Created by Zam")
+        page1.set_footer(text=f"Bot Created by {self.author.owners}")
 
         # --------------------page1------------------------------------------------------------------#
 
@@ -62,45 +71,13 @@ class HelpCog(commands.Cog, name="help command"):
                         inline=False)
         page2.set_footer(text="Bot Created by Zam")
 
-        pages = 2
-        cur_page = 1
-        message = await ctx.send(f"{cur_page}/{pages}:\n", embed=page1)
-        # getting the message object for editing and reacting
-
-        await message.add_reaction("◀️")
-        await message.add_reaction("▶️")
-
-        def check(reaction, user):
-            return user == ctx.author and str(reaction.emoji) in ["◀️", "▶️"]
-            # This makes sure nobody except the command sender can interact with the "menu"
-
-        while True:
-            try:
-                reaction, user = await bot.wait_for("reaction_add", timeout=60, check=check)
-                # waiting for a reaction to be added - times out after x seconds, 60 in this
-                # example
-
-                if str(reaction.emoji) == "▶️" and cur_page != pages:
-                    cur_page += 1
-                    await message.edit(content=f"Page {cur_page}/{pages}:\n", embed=page2)
-                    await message.remove_reaction(reaction, user)
-
-                elif str(reaction.emoji) == "◀️" and cur_page > 1:
-                    cur_page -= 1
-                    await message.edit(content=f"Page {cur_page}/{pages}:\n", embed=page1)
-                    await message.remove_reaction(reaction, user)
-
-                else:
-                    await message.remove_reaction(reaction, user)
-                    # removes reactions if the user tries to go forward on the last page or
-                    # backwards on the first page
-            except asyncio.TimeoutError:
-                await message.delete()
-                break
-                # ending the loop if user doesn't react after x seconds
+        embeds = [
+                page1, page2
+        ]
+        paginator = BotEmbedPaginator(ctx, embeds)
+        await paginator.run()
 
 
-# ------------------------ BOT ------------------------ #
 
 def setup(bot):
     bot.remove_command("help")
