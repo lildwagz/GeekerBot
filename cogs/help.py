@@ -57,7 +57,7 @@ class HelpCog(commands.Cog, name="help command"):
                               f"{self.bot.command_prefix}hotcalc    :** Returns a random percent for how hot is a discord user\n**"
                               f"{self.bot.command_prefix}reverse    :**  !poow ,ffuts esreveR Everything you type after reverse will of course, be reversed\n**"
                         , inline=False)
-        page1.set_footer(text=f"Bot Created by {self.author.owners}")
+        page1.set_footer(text=f"Bot Created by ".join([str(self.bot.get_user(x)) for x in self.author.owners]))
 
         # --------------------page1------------------------------------------------------------------#
         page2 = discord.Embed(title=f"__**Help page of {self.bot.user.name}**__",
@@ -65,9 +65,11 @@ class HelpCog(commands.Cog, name="help command"):
         page2.set_thumbnail(url=f'{self.bot.user.avatar_url}')
         page2.add_field(name="__Utility :__", value=f"{self.bot.command_prefix}qrcode :** Makes a QR code for you\n**"
                                                     f"{self.bot.command_prefix}avatar :** Displays a user's avatar.\n**"
-                                                    f"{self.bot.command_prefix}memberinfo :** Displays a member's account information..\n**",
+                                                    f"{self.bot.command_prefix}memberinfo :** Displays a member's account information.\n**"
+                                                    f"{self.bot.command_prefix}wiki :** search the best definition on wikipedia/\n**"
+                                                    f"{self.bot.command_prefix}weather :** gets the current weahter/\n**",
                         inline=False)
-        page2.set_footer(text="Bot Created by Zam")
+        page2.set_footer(text=f"Bot Created by ".join([str(self.bot.get_user(x)) for x in self.author.owners]))
 
         embeds = [
                 page1, page2

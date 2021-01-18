@@ -1,3 +1,7 @@
+import os
+import sys
+import time
+
 import aiohttp
 import discord
 
@@ -115,6 +119,43 @@ class Admin(commands.Cog, name="admin"):
         except TypeError:
             await ctx.send("You need to either provide an image URL or upload one with the command")
 
+    @commands.command()
+    @commands.check(permissions.is_owner)
+    async def reloadall(self, ctx):
+        """ Reloads all extensions. """
+        error_collection = []
+        for file in os.listdir("cogs"):
+            if file.endswith(".py"):
+                name = file[:-3]
+                try:
+                    self.bot.reload_extension(f"cogs.{name}")
+                except Exception as e:
+                    error_collection.append(
+                        [file, default.traceback_maker(e, advance=False)]
+                    )
+
+        if error_collection:
+            output = "\n".join([f"**{g[0]}** ```diff\n- {g[1]}```" for g in error_collection])
+            return await ctx.send(
+                f"Attempted to reload all extensions, was able to reload, "
+                f"however the following failed...\n\n{output}"
+            )
+
+        await ctx.send("Successfully reloaded all extensions")
+
+    @commands.command()
+    @commands.check(permissions.is_owner)
+    async def reboot(self, ctx):
+        """ Reboot the bot """
+
+        try:
+            await ctx.send('Rebooting now...')
+            time.sleep(1)
+            await self.bot.close()
+        except:
+            pass
+        finally:
+            pass
 
 def setup(bot):
     bot.add_cog(Admin(bot))

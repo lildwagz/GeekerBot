@@ -200,8 +200,6 @@ class Fun_Commands(commands.Cog):
         if hasattr(ctx, 'guild') and ctx.guild is not None:
             embedColour = ctx.me.top_role.colour
 
-        embed = discord.Embed(colour=embedColour)
-
         await ctx.send(f"```fix\n{url['quote']}\nby :{url['author']}```")
 
     @commands.command()

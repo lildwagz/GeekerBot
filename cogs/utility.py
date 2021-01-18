@@ -1,13 +1,16 @@
+import io
+import json
 import os
 import time
 
 import discord
 import typing
-
 import qrcode
+import requests
 from discord.ext import commands
-
-from utils import default, converters, utils
+from cogs.func import CaptchaMaker
+from utils import default, converters
+import wikipedia
 
 
 class UtilityCommand(commands.Cog):
@@ -88,11 +91,80 @@ class UtilityCommand(commands.Cog):
         """ Pong! """
         before = time.monotonic()
         before_ws = int(round(self.bot.latency * 1000, 1))
-        message = await ctx.send("ðŸ“ Pong")
+        message = await ctx.send(":ping_pong:  Pong")
         ping = (time.monotonic() - before) * 1000
-        await message.edit(content=f"ðŸ“ WS: {before_ws}ms  |  REST: {int(ping)}ms")
+        await message.edit(content=f":ping_pong: Pong  WS: {before_ws}ms  |  REST: {int(ping)}ms")
 
+    def load_captchas(self):
+        with open('Databases/captcha/captchas.json') as json_file:
+            return json.load(json_file)
 
+    def save_catchas(self, captchas):
+        with open('Databases/captcha/captchas.json', 'w') as outfile:
+            json.dump(captchas, outfile)
+
+    @commands.command()
+    async def verify(self, ctx):
+        captcha_list = self.load_captchas()
+        captchaValue = CaptchaMaker.create()
+        captcha_list[ctx.author.id] = captchaValue
+        self.save_catchas(captcha_list)
+        file = "captcha_" + captchaValue + ".png"
+        loading = await ctx.send(
+            "Please verify that you are a human by completing this challenge.\n**Reply with ?verify "
+            "captchahere** to verify your account.\n**Reply with ?new** to get a new challenge.",
+            file=discord.File("Databases/captcha/" + file))
+        os.system("rm -f " + file)
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        captcha_list = self.load_captchas()
+        if message.content.startswith("?verify"):
+            if captcha_list[str(message.author.id)] == message.content.split(" ")[1]:
+                await message.channel.send("You have been verified.")
+                captcha_list.pop(str(message.author.id))
+                self.save_catchas(captcha_list)
+            else:
+                await message.channel.send("Incorrect captcha.")
+        elif message.content == "?new":
+            captcha_list = self.load_captchas()
+            captchaValue = CaptchaMaker.create()
+            captcha_list[str(message.author.id)] = captchaValue
+            self.save_catchas(captcha_list)
+            file = "captcha_" + captchaValue + ".png"
+            await message.channel.send(file=discord.File("Databases/captcha/" + file))
+            os.system("rm -f " + file)
+
+    @commands.command()
+    async def wiki(self, ctx, *, question):
+        """search the best definition on wikipedia"""
+        try:
+            result = wikipedia.summary(question, sentences=2)
+            await ctx.send(f"The result of {question} :\n```{result}```")
+        except:
+            await ctx.send("Invalid command")
+
+    @commands.command(name="weather")
+    async def weather(self, ctx, city):
+        """gets the current weather """
+
+        baseurl = "https://api.openweathermap.org/data/2.5/weather?"
+        url = baseurl + "q=" + city + "&appid=" + self.config.API_KEY_WEATHER
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            main = data['main']
+            temperature = main['temp']
+            humidity = main['humidity']
+            pressure = main['pressure']
+            report = data['weather']
+            msg1 = discord.Embed(title=f":cityscape:' Today's Weather", color=0x7CFC00)
+            msg1.add_field(
+                name=f"Temperature : {temperature}\nHumidity : {humidity}\nPressure : {pressure}\nWeather Report : {report[0]['description']}",
+                value=f"{city:-^30}", inline=False)
+            await ctx.send(embed=msg1)
+        else:
+            await ctx.channel.send("Unpredictable!")
 
 
 def setup(bot):

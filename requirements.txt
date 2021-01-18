@@ -7,8 +7,11 @@ timeago==1.0.13
 humanize
 yarl<1.2
 qrcode==6.1
-import fuzzywuzzy.process
+fuzzywuzzy.process
 python-Levenshtein
 discord
 pendulum
-
+captcha
+youtube_dl
+wikipedia
+better_profanity

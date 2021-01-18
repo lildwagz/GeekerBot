@@ -10,6 +10,5 @@ class Hacking(commands.Cog, name="hacking"):
         self._last_result = None
 
 
-
 def setup(bot):
     bot.add_cog(Hacking(bot))

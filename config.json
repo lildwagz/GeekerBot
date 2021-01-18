@@ -1,8 +1,13 @@
 {
-    "token": "(your bot token)",
-    "join_message": "Hello world! 🌟",
+    "token": "NzcyNzQ4NjM2NTU0Nzg4ODk1.X5_MPw.DaWtOEZAoOnhvPPwXvPkNmHKUX8",
+    "API_KEY_WEATHER" : "3f35b27c0adfb02b5b123c6ca2e52a48",
+    "join_message": "Hello world 🌟",
     "antiSpam": true,
     "automod" : false,
+    "captcha" : false,
+    "antitoxic": true,
+    "SkipBots" : true,
+    "antiLinks" : true,
     "owners": [
         622741208313102336
     ],
@@ -15,8 +20,7 @@
     "version": "1.0.0",
     "playing": "prefix g!,yewwhaoo",
     "allowSpam": [
-        0,
         771219610937851904
     ],
-    "logChannel": 0
+    "captchaChannel": 0
 }

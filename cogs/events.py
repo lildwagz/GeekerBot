@@ -1,5 +1,8 @@
 import json
 import random
+import re
+import sys
+from os import path
 
 import discord
 import psutil
@@ -7,13 +10,13 @@ import os
 import asyncio
 
 from datetime import datetime
+
 from discord.ext import commands
 from discord.ext.commands import errors
 
-from cogs import allowSpam
-from cogs.func import CaptchaMaker
 from cogs.mod2 import color_list
 from utils import default, lists
+from better_profanity import profanity
 
 
 class Events(commands.Cog):
@@ -75,7 +78,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         """ The function that activates when boot was completed """
-        if not hasattr(self.bot, 'uptime'):
+        if not hasattr(self.bot, 'uptimes'):
             self.bot.uptime = datetime.utcnow()
 
         status = self.config.status_type.lower()
@@ -103,26 +106,42 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        whitelisted_roles = [771035451128938506]
         with open("config.json", "r") as con:
             config = json.load(con)
             antiSpam = config["antiSpam"]
             allowSpam = config["allowSpam"]
             antitoxic = config["antitoxic"]
+            captcha = config["captcha"]
+            antiLinks = config["antiLinks"]
         if message.author.bot:
             return
 
-        if antitoxic:
-            for word in lists.badwords:
-                # logChannel = self.bot.get_channel(data["logChannel"])
-                if word in message.content.lower():
-                    message = await message.channel.send(":arrows_counterclockwise: deleting message...")
-                    await asyncio.sleep(1)
-                    await message.delete()
-                    await asyncio.sleep(1)
-                    await message.edit(
-                        content=f":warning: {message.author.mention} bad words are not allowed in this server"
-                                " kiddo! :warning:"
-                        )
+        if antitoxic or antiLinks:
+            if self.config.SkipBots and message.author.bot:
+                return None
+            for role in message.author.roles:
+                if role.id in whitelisted_roles:
+                    return None
+            regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([" \
+                    r"^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’])) "
+
+            url = re.findall(regex, message.content)
+            detect = ([x[0] for x in url])
+            censored = profanity.censor(message.content)
+
+            embed = discord.Embed(title=f'**{message.author}** has been warned!',
+                                  description=f'**Reason**: Using blacklisted content\n**Content**: ||{message.content}||',
+                                  color=0x0fa7d0)
+            embed.set_thumbnail(url=message.author.avatar_url)
+
+            if profanity.contains_profanity(message.content) and antitoxic:
+                await message.delete()
+                await message.channel.send(embed=embed, delete_after=10)
+            elif detect and antiLinks:
+                await message.delete()
+                await message.channel.send(embed=embed, delete_after=10)
+
 
         if antiSpam:
             warnerName = "GeekerBot"
@@ -139,10 +158,11 @@ class Events(commands.Cog):
                 if message.channel.id in allowSpam:
                     return
 
-                if len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 4 and len(
-                        list(filter(lambda m: check(m), self.bot.cached_messages))) < 6:
+                if len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 9 and len(
+                        list(filter(lambda m: check(m), self.bot.cached_messages))) < 12:
                     await message.channel.send(f"{message.author.mention} don't do that bruh!")
-                elif len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 7:
+                elif len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 14 \
+                        :
                     dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                     if not os.path.exists("Databases/warns/" + str(message.guild.id) + "/"):
                         os.makedirs("Databases/warns/" + str(message.guild.id) + "/")
@@ -211,9 +231,20 @@ class Events(commands.Cog):
                             embed=embed
                         )
                         return
-         
+                    # embed = discord.Embed(
+                    #     title=f"**YOU HAVE BEEN KICKED FROM {message.author.guild.name}**",
+                    #     description=f"Reason : You spammed.", color=0xff0000)
+                    # await message.author.send(embed=embed)
+                    # # await message.author.kick()  # Kick the user
+                    # await message.channel.send(
+                    #     f"{message.author.mention} hell yeah this dude has no chill !")
+
             except:
                 pass
+
+        if captcha:
+            pass
+
 
     # @commands.Cog.listener()
     # async def on_member_join(self, member):

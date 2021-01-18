@@ -1,0 +1,37 @@
+2020-12-21 18:21:31,173 - celery.utils.dispatch.signal - ERROR - Signal handler <function setup_loggers at 0x0000023BF90A01F0> raised: gaierror(10109, 'getaddrinfo failed')
+Traceback (most recent call last):
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\site-packages\celery\utils\dispatch\signal.py", line 276, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "D:\PYTHON KU\GeekerBot2\celerys\worker.py", line 29, in setup_loggers
+    slh = logging.handlers.SysLogHandler(address=('logsN.papertrailapp.com', '...'))
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\logging\handlers.py", line 829, in __init__
+    ress = socket.getaddrinfo(host, port, 0, socktype)
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 10109] getaddrinfo failed
+2020-12-21 18:21:31,789 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 18:21:31,803 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 18:21:32,858 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 18:21:32,930 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 18:21:35,953 - celery.utils.dispatch.signal - ERROR - Signal handler <function setup_loggers at 0x000001ECC733E430> raised: gaierror(10109, 'getaddrinfo failed')
+Traceback (most recent call last):
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\site-packages\celery\utils\dispatch\signal.py", line 276, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "D:\PYTHON KU\GeekerBot2\celerys\worker.py", line 29, in setup_loggers
+    slh = logging.handlers.SysLogHandler(address=('logsN.papertrailapp.com', '...'))
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\logging\handlers.py", line 829, in __init__
+    ress = socket.getaddrinfo(host, port, 0, socktype)
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 10109] getaddrinfo failed
+2020-12-21 18:21:36,373 - celery.utils.dispatch.signal - ERROR - Signal handler <function setup_loggers at 0x00000277B5E1E430> raised: gaierror(10109, 'getaddrinfo failed')
+Traceback (most recent call last):
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\site-packages\celery\utils\dispatch\signal.py", line 276, in send
+    response = receiver(signal=self, sender=sender, **named)
+  File "D:\PYTHON KU\GeekerBot2\celerys\worker.py", line 29, in setup_loggers
+    slh = logging.handlers.SysLogHandler(address=('logsN.papertrailapp.com', '...'))
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\logging\handlers.py", line 829, in __init__
+    ress = socket.getaddrinfo(host, port, 0, socktype)
+  File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno 10109] getaddrinfo failed
