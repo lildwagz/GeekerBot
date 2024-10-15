@@ -6,8 +6,8 @@ class dbmysql():
         # self.DbConnect = pymysql.connect(host="localhost", user="lildwagz",
         #                             password="lildwagz",
         #                             db="geekerbot")
-        self.DbConnect = pymysql.connect(host="13.212.6.176", user="lildwagz",
-                                         password="lildwagz",
+        self.DbConnect = pymysql.connect(host="localhost", user="root",
+                                         password="",
                                          db="geekerbot")
 
 

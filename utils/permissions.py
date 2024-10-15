@@ -52,6 +52,9 @@ async def check_priv(ctx, member):
         pass
 
 
+def can_manageserver(ctx):
+    return isinstance(ctx.channel, discord.DMChannel) or ctx.channel.permissions_for(ctx.guild.me).administrator
+
 def can_send(ctx):
     return isinstance(ctx.channel, discord.DMChannel) or ctx.channel.permissions_for(ctx.guild.me).send_messages
 

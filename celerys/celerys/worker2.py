@@ -143,12 +143,25 @@ def get_spamchannel():
     cursor.close()
     return sq
 
+@apps2.task()
+def get_infractionchannel():
+    conn = dbmysql().DbConnect
+    query = "SELECT guild_id,infractionchannel FROM tbl_settings"
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        sq = cursor.fetchall()
+        if not sq:
+            return False
+        conn.commit()
+    cursor.close()
+    return sq
+
 
 @apps2.task()
 def get_allguildtoogle():
     conn = dbmysql().DbConnect
     query = "SELECT guild_id,guildtopgames,imgwelcome_toggle,levelsystem_toggle,antiSpam,automod,captcha," \
-            "antitoxic,antiLinks,ageaccount_toggle FROM tbl_settings"
+            "antitoxic,antiLinks,ageaccount_toggle,triggerword_toogle,triggerrole_toogle FROM tbl_settings"
     with closing(conn.cursor()) as cursor:
         cursor.execute(query)
         sq = cursor.fetchall()
@@ -213,6 +226,54 @@ def get_global_user_data(user_id, guildid):
 def get_prefix():
     conn = dbmysql().DbConnect
     query = f"SELECT guild_id,prefix FROM tbl_settings"
+    try:
+        with closing(conn.cursor()) as cursor:
+            cursor.execute(query)
+            sq = cursor.fetchall()
+            if not sq:
+                return False
+            conn.commit()
+    except:
+        return False
+    cursor.close()
+    return sq
+
+@apps2.task()
+def get_triggeredowrd():
+    conn = dbmysql().DbConnect
+    query = f"SELECT * FROM `tbl_triggerword`"
+    try:
+        with closing(conn.cursor()) as cursor:
+            cursor.execute(query)
+            sq = cursor.fetchall()
+            if not sq:
+                return False
+            conn.commit()
+    except:
+        return False
+    cursor.close()
+    return sq
+
+@apps2.task()
+def get_triggeredrole():
+    conn = dbmysql().DbConnect
+    query = f"SELECT * FROM `tbl_triggerrole`"
+    try:
+        with closing(conn.cursor()) as cursor:
+            cursor.execute(query)
+            sq = cursor.fetchall()
+            if not sq:
+                return False
+            conn.commit()
+    except:
+        return False
+    cursor.close()
+    return sq
+
+@apps2.task()
+def get_whitelistroles():
+    conn = dbmysql().DbConnect
+    query = f"SELECT * FROM `tbl_whitelistroles`"
     try:
         with closing(conn.cursor()) as cursor:
             cursor.execute(query)

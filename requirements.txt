@@ -1,4 +1,6 @@
-git+https://github.com/Rapptz/discord.py@master
+mutagen
+ksoftapi
+discord.py
 git+git://github.com/Axelancerr/discord-ext-alternatives.git#egg=discord-ext-alternatives
 asyncio
 psutil
@@ -15,3 +17,13 @@ captcha
 youtube_dl
 wikipedia
 better_profanity
+magicpython-magic
+lxml
+tensorflow==2.1
+transformers==3.3.0
+ --find-links https://download.pytorch.org/whl/torch_stable.html
+torch==1.6.0+cpu
+wavelink
+celery
+libmorse
+redis

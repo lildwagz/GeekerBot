@@ -1,13 +1,20 @@
 {
-    "token": "NzcyNzQ4NjM2NTU0Nzg4ODk1.X5_MPw.DaWtOEZAoOnhvPPwXvPkNmHKUX8",
-    "API_KEY_WEATHER" : "3f35b27c0adfb02b5b123c6ca2e52a48",
-    "join_message": "Hello world 🌟",
+
+    "token": "",
+
+    "tokn": "",
+    "API_KEY_WEATHER": "",
+    "API_KEY_ALEX": "",
+    "API_KEY_GIPHY": "",
+    "google_Key": "",
+    "join_message": "print(\"Hello world\")",
     "antiSpam": true,
-    "automod" : false,
-    "captcha" : false,
-    "antitoxic": true,
-    "SkipBots" : true,
-    "antiLinks" : true,
+    "automod": false,
+    "captcha": true,
+    "antitoxic": false,
+    "SkipBots": true,
+    "antiLinks": true,
+    "ksoft_token": "",
     "owners": [
         622741208313102336
     ],
@@ -17,10 +24,39 @@
     "activity": "prefix g!,yewwhaoo",
     "activity_type": "playing|watching|listening|competing",
     "status_type": "online|idle|dnd",
-    "version": "1.0.0",
+    "version": "2.1.0",
     "playing": "prefix g!,yewwhaoo",
+    "emoji": {},
     "allowSpam": [
         771219610937851904
     ],
-    "captchaChannel": 0
+    "captchaChannel": 0,
+    "MYSQL_HOST": "gabutcodex.tk",
+    "MYSQL_USER": "mroosvelt",
+    "MYSQL_PASS": "123lildwagz",
+    "MYSQL_DB": "mroosvelt_geekerbot",
+    "exploit_db": {
+        "help_title": "Help Page of exploit-db",
+        "help_desc": "Searches exploit-db for exploits.",
+        "help_flags": "Here are all the flags you can use:",
+        "help_usage": "[-Title][-CVE][-Type][-Platform][-Port][-Content][-Author][-Tag][-Help] {Query}",
+        "no_exploits": "No exploits Found!",
+        "no_exploits_desc": "Gotta search for an 0-day.",
+        "syntax_error": "Something seems to be wrong with your Syntax!",
+        "wrong_type": "You have entered a wrong type. ",
+        "wrong_platform": "You have entered a wrong Platform, allowed Platforms are:",
+        "wrong_tag": "You have entered a wrong tag, allowed tags are:",
+        "allowed_platforms": "Allowed Platforms are: ",
+        "allowed_types": "Allowed types are:",
+        "allowed_tags": "Allowed Tags are:",
+        "help_flags_title": "A part of the title of your exploit",
+        "help_flags_cve": "The CVE Number of your exploit, both CVE-xxxx-xxxx and xxxx-xxxxx supported.",
+        "help_flags_type": "The type of your exploit, use `-Help Type` to see allowed values",
+        "help_flags_platform": "The platform your exploit is for, use `-Help Platform` to see allowed values",
+        "help_flags_port": "The Port your exploit is for, allowed Values are 1 - 65535, though not all will have results.",
+        "help_flags_content": "Content of your exploit",
+        "help_flags_author": "Submitter of your exploit",
+        "help_flags_tag": "Tag of your exploit, use `-Help Tag` to see allowed values",
+        "help_flags_other": "If you use a flag twice the second value is used.\nIf you don't use any flags, -Title will be used."
+    }
 }

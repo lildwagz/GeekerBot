@@ -1,0 +1,50 @@
+//Name [tab] Description [tab] SIValue [tab] SIUnits [tab] EngValue [tab], EngUnits
+NA#	Avogadro's constant	6.022169e26	1/kmol	6.022169e26	1/lbmol
+h_NH3#	Ammonia (gas) enthalpy of formation (25C, 77F)	-46190	kJ/kmol	-1.985812E+04	Btu/lbmol
+e#	Electron charge	1.6021917e-19	Coulomb	1.6021917e-19	Coulomb
+h_C2H4#	Ethylene enthalpy of formation (25C, 77F)	52280	kJ/kmol	2.247635E+04	Btu/lbmol
+g#	Gravitational acceleration (sea level)	9.807	m/s^2	3.217520E+01	ft/s^2
+F#	Faraday's constant	9.648670E7	Coulomb/kmol	4.376563E7	Coulomb/lbmol
+gc#	Gravitational constant	6.6732e-11	N-m^2/kg^2	3.3224e-11	lb_f-ft^2/lb_m^2
+h_CH2#	Acetylene enthalpy of formation (25C, 77F)	226730	kJ/kmol	9.747635E+04	Btu/lbmol
+r_e#	Classical electron radius	2.817939e-15	m	9.245207E-15	ft
+h_C6H6#	Benzene (gas) enthalpy of formation (25C, 77F)	82930	kJ/kmol	3.565348E+04	Btu/lbmol
+C1#	Blackbody radiation constant 1	3.7420e8	W-micrometer^4/m^2	1.187e8	Btu-micrometer^4/hr-ft^2
+k#	Boltzmann's constant	1.380622e-23	J/K	7.269872E-27	Btu/R
+Black#	the color black	0		0	
+White#	the color white	16777215		16777215	
+h_C2H5OH_g#	Ethanol (gas) enthalpy of formation (25C, 77F)	-235310	kJ/kmol	-1.011650E+05	Btu/lbmol
+epsilon_o#	Permittivity of free space	8.85418782e-12	Farads/m	2.698756E-12	Farads/ft
+true#	true# and false# are used in logic tests	1		1	
+false#	true# and false# are used in logic tests	0		0	
+e\Me#	Electron charge to mass ratio	1.7588028e11	Coulomb/kg	7.977796E+10	Coulomb/lb_m
+C2#	Blackbody radiation constant 2	1.4388e4	micrometer-K	2.5897e4	micrometer-R
+h_C2H5OH_l#	Ethanol (liq) enthalpy of formation (25C, 77F)	-277690	kJ/kmol	-1.193852E+05	Btu/lbmol
+Me#	Electron rest mass	9.109558e-31	kg	2.008314E-30	lb_m
+Red#	red	255		255	
+C3#	Blackbody radiation constant 3	2897.7	micrometer-K	5215.6	micrometer-R
+h_C8H18_l#	n-Octane (liq) enthalpy of formation (25C, 77F)	-249950	kJ/kmol	-1.074591E+05	Btu/lbmol
+h_CH3OH_l#	Methanol (liq) enthalpy of formation (25C, 77F)	-238660	kJ/kmol	-1.026053E+05	Btu/lbmol
+h_C8H18_g#	n-Octane (gas) enthalpy of formation (25C, 77F)	-208450	kJ/kmol	-8.961737E+04	Btu/lbmol
+T_zero#	T_zero# + C (or F) = K (or R)	273.15	K	459.67	R
+Mn#	Neutron rest mass	1.674920e-27	kg	3.692567E-27	lb_m
+Po#	Normal atmospheric pressure	101.325	kPa	1.469594E+01	psia
+R_inf#	Rydberg constant	1.097373e7	1/m	3.344793E+06	1/ft
+h_C3H6_g#	Propylene (gas) enthalpy of formation (25C, 77F)	-20410	kJ/kmol	-8.774720E+03	Btu/lbmol
+Mp#	Proton rest mass	1.672614e-27	kg	3.687483E-27	lb_m
+h#	Planck's constant	6.62606957e-34	J-s	6.2803013E-37	Btu-s
+Vo#	Volume of ideal gas, standard conditions	2.24136e1	m^3/kmol	3.590314E+02	ft^3/lbmol
+Blue#	the color blue	16711680		16711680	
+R#	Gas constant	8.31434	kJ/kmol-K	1.985846	Btu/lbmol-R
+SndSpeed#	speed of sound in dry air at 0 C and 1 atm	331.36	m/s	1089	ft/s
+sigma#	Stefan-Boltzmann constant	5.670373e-8	W/m^2-K^4	1.71229479E-09	Btu/hr-ft^2-R^4
+h_CH3OH_g#	Methanol (gas) enthalpy of formation (25C, 77F)	-200670	kJ/kmol	-8.627257E+04	Btu/lbmol
+h_H2O2#	Hydrogen peroxide (gas) enthalpy of formation (25C, 77F)	-136310	kJ/kmol	-5.860275E+04	Btu/lbmol
+G_sc#	Solar constant	1367	W/m^2	433	Btu/ft^2-hr
+h_fg_water#	Enthalpy of vaporization of water (25C, 77F)	2441.5	kJ/kg	1.049656E+03	Btu/lb_m
+U#	Unified atomic mass unit	1.660531e-27	kg	3.660845E-27	lb_m
+Yellow#	the color yellow	65535		65535	
+C#	Speed of light in a vacuum	2.9979250e8	m/s	9.835712E+08	ft/s
+Green#	the color green	65280		65280	
+pi#	pi	3.14159265359	-	3.14159265359	-
+mu_o#	Permeability of free space	1.25663705e-6	N/amp^2	2.825032E-07	lbf/amp^2

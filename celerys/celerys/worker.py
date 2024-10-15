@@ -20,7 +20,7 @@ logger = get_task_logger(__name__)
 
 
 @apps.task()
-def initialize_guild(guild_id):
+def initialize_guild(guild_id,datejoin):
     logger.info('Got Request - Starting work ')
     conn = dbmysql().DbConnect
 
@@ -31,7 +31,7 @@ def initialize_guild(guild_id):
             if sql:
                 pass
             else:
-                cursor.execute(f"INSERT INTO tbl_guilds (`guild_id`) VALUES ({guild_id});")
+                cursor.execute(f"INSERT INTO tbl_guilds (`guild_id`,`datejoin`) VALUES (%s,%s)" , (str(guild_id),str(datejoin)))
                 conn.commit()
             cursor.execute(f"SELECT * FROM tbl_settings WHERE guild_id= {guild_id};")
             sql = cursor.fetchone()
@@ -194,10 +194,17 @@ def insert_warn(kode_user: str, code: int, offender_name: str, position: int, us
             cursor.close()
             return True
         else:
-            query = f"INSERT INTO tbl_warns (kode_user, code,offender_name,position,user_id,warner,warner_name," \
-                    f"reason,channel,datetime) VALUES ('{kode_user}', {code}, '{offender_name}',{position},{user_id}," \
-                    f"{warner},'{warner_name}','%s',{channel},'{datetime}') " % (str(reason))
-            cursor.execute(query)
+            cursor.execute("INSERT INTO tbl_warns (kode_user, code,offender_name,position,user_id,warner,warner_name,"
+                           "reason,channel,datetime) VALUES (%s,%s, %s,%s,%s,%s,%s,%s,%s,%s) ", (str(kode_user),
+                                                                                                  str(code),
+                                                                                                  str(offender_name),
+                                                                                                  str(position),
+                                                                                                  str(user_id),
+                                                                                                  str(warner),
+                                                                                                  str(warner_name),
+                                                                                                  str(reason),
+                                                                                                  str(channel),
+                                                                                                  str(datetime)))
             conn.commit()
             logger.info(f'Success - inserting  {offender_name}  warn into tbl_warns')
             cursor.close()
@@ -254,6 +261,15 @@ def set_housminage(guildid, hours):
     cursor.close()
     return
 
+@apps.task()
+def ageaccount_toggle(guildid, toogle):
+    conn = dbmysql().DbConnect
+    query = f"UPDATE tbl_settings SET ageaccount_toggle={toogle} WHERE guild_id={guildid}"
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        conn.commit()
+    cursor.close()
+    return
 
 
 
@@ -262,6 +278,16 @@ def set_housminage(guildid, hours):
 def set_spamchannel(guildid, channel):
     conn = dbmysql().DbConnect
     query = f"UPDATE tbl_settings SET allowSpam={channel} WHERE guild_id={guildid}"
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        conn.commit()
+    cursor.close()
+    return
+
+@apps.task()
+def set_infractionchannel(guildid, channel):
+    conn = dbmysql().DbConnect
+    query = f"UPDATE tbl_settings SET infractionchannel={channel} WHERE guild_id={guildid}"
     with closing(conn.cursor()) as cursor:
         cursor.execute(query)
         conn.commit()
@@ -369,29 +395,106 @@ def set_autorole(guildid,roleid):
 
 @apps.task()
 def set_triggerword(guildid,roleid,channel,word):
-    conn = dbmysql().DbConnect
 
     conn = dbmysql().DbConnect
     query = 'select * from tbl_triggerword where  guild_id=%s' % (str(guildid))
-    try:
-        with closing(conn.cursor()) as cursor:
-            cursor.execute(query)
-            sql = cursor.fetchone()
-            if sql:
-                pass
-            else:
-                query = f"INSERT INTO tbl_triggerword  (`guild_id`,`word`,`	role`,`channel`) VALUES  ({guildid},{word},{roleid},{channel})"
-                cursor.execute(query)
-                conn.commit()
-            cursor.close()
-    except:
+    # try:
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        sql = cursor.fetchone()
+        if sql:
+
+            cursor.execute("UPDATE tbl_triggerword SET word=%s, role=%s, channel=%s where guild_id=%s", (str(word),roleid,channel,str(guildid)))
+            conn.commit()
+            return
+        else:
+            cursor.execute('INSERT INTO tbl_triggerword  (`guild_id`,`word`,`role`,`channel`) VALUES  (%s,%s,%s,%s)', (str(guildid),str(word),roleid,channel))
+            conn.commit()
         cursor.close()
-        # logger.info('Failed - quering data user from database')
-        return False
+    # except :
+    #     cursor.close()
+    #     # logger.info('Failed - quering data user from database')
+    #     return False
     # logger.info('work finished')
     return
 
+@apps.task()
+def set_triggerwordtoogle(guildid,toogle):
+    conn = dbmysql().DbConnect
+    query = f"UPDATE tbl_settings SET triggerword_toogle={toogle} WHERE guild_id={guildid}"
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        conn.commit()
+    cursor.close()
+    return
 
+@apps.task()
+def set_triggerrole(guildid,newrole,oldrole):
+
+    conn = dbmysql().DbConnect
+    query = 'select * from tbl_triggerrole where  guild_id=%s' % (str(guildid))
+    # try:
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        sql = cursor.fetchone()
+        if sql:
+
+            cursor.execute("UPDATE tbl_triggerrole SET newrole=%s, oldrole=%s where guild_id=%s", (str(newrole),oldrole,str(guildid)))
+            conn.commit()
+            return
+        else:
+            cursor.execute('INSERT INTO tbl_triggerrole  (`guild_id`,`newrole`,`oldrole`) VALUES  (%s,%s,%s)', (str(guildid),str(newrole),oldrole))
+            conn.commit()
+        cursor.close()
+    # except :
+    #     cursor.close()
+    #     # logger.info('Failed - quering data user from database')
+    #     return False
+    # logger.info('work finished')
+    return
+
+@apps.task()
+def set_triggerroletoogle(guildid,toogle):
+    conn = dbmysql().DbConnect
+    query = f"UPDATE tbl_settings SET triggerrole_toogle={toogle} WHERE guild_id={guildid}"
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        conn.commit()
+    cursor.close()
+    return
+
+@apps.task()
+def insert_whitelist(guildid, role):
+    conn = dbmysql().DbConnect
+    query = f"SELECT * FROM tbl_whitelistroles WHERE guild_id='{str(guildid)}' and role={role}"
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        sq = cursor.fetchone()
+        if sq:
+            conn.commit()
+            cursor.close()
+            return True
+        else:
+            cursor.execute("INSERT INTO tbl_whitelistroles (guild_id, role) VALUES (%s,%s) ", (str(guildid),
+                                                                                                 str(role)
+                                                                                                 ))
+            conn.commit()
+            cursor.close()
+
+    # except:
+    #     cursor.close()
+    #     return
+    return
+
+@apps.task()
+def delete_whitelist(guildid, role):
+    conn = dbmysql().DbConnect
+    query = f"DELETE FROM tbl_whitelistroles WHERE guild_id='{str(guildid)}' AND role='{str(role)}'"
+    with closing(conn.cursor()) as cursor:
+        cursor.execute(query)
+        conn.commit()
+        cursor.close()
+    return
 
 if __name__ == '__main__':
     apps.start()

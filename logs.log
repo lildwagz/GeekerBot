@@ -35,3 +35,39 @@ Traceback (most recent call last):
   File "C:\Users\azzam\miniconda3\envs\GeekerBot2\lib\socket.py", line 918, in getaddrinfo
     for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
 socket.gaierror: [Errno 10109] getaddrinfo failed
+2020-12-21 18:22:48,545 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 18:22:48,577 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 18:22:49,767 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 18:22:49,928 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 18:37:23,675 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 18:37:23,694 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 18:37:24,761 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 18:37:24,868 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 18:49:04,234 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 18:49:04,280 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 18:49:05,333 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 18:49:05,372 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 18:58:22,069 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 18:58:22,083 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 18:58:23,137 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 18:58:23,265 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 19:10:34,337 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 19:10:34,356 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 19:10:35,421 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 19:10:35,515 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 19:16:25,985 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 19:16:26,013 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 19:16:27,064 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 19:16:27,237 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 19:19:30,865 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 19:19:31,139 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 19:19:32,200 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 19:19:32,235 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 19:24:17,898 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 19:24:17,915 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 19:24:18,962 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 19:24:19,049 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.
+2020-12-21 19:32:44,555 - celery.worker.consumer.connection - INFO - Connected to redis://127.0.0.1:6380/0
+2020-12-21 19:32:44,611 - celery.worker.consumer.mingle - INFO - mingle: searching for neighbors
+2020-12-21 19:32:45,724 - celery.worker.consumer.mingle - INFO - mingle: all alone
+2020-12-21 19:32:45,760 - celery.apps.worker - INFO - celery@LAPTOP-47OQ9IM6 ready.

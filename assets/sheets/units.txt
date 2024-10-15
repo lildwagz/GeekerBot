@@ -1,0 +1,337 @@
+{
+This file provides definitions of units in terms of a basic set of dimensions.  The basic
+dimensions and the selected unit for each dimension are:
+
+L       length    m
+M       Mass    kg
+N       Moles   kmole
+T       Time    sec
+D       Temperature Difference  K
+A       Angle     radian
+C       Charge  coulomb
+I       Illuminance lm
+
+You may enter additional unit definitions to this file.  To do so, enter the unit name followed
+by its conversion factor into the selected set of dimenions indicated above separated with
+one or more spaces.  Designate a new dimension type by preceding the description with a $
+and provide the basic dimensions in parentheses.
+
+$Length (L)
+m     1
+meter 1
+metre 1
+Angstrom 1E-10
+nm 1E-9
+ft  0.3048
+dm 0.1
+in  0.0254
+inch 0.0254
+mm  0.001
+micron 1e-6
+micrometer 1e-6
+µm  1e-6
+nanometer 1e-9
+millimeter 0.001
+cm  0.01
+km  1000
+yd  0.9144
+yard 0.9144
+mi    1609.344
+mile  1609.344
+miles 1609.344
+fathom 1.8288
+mil 0.0000254
+rod  5.0292
+furlong 201.168
+league 5556
+hectometer 100
+
+$Mass (M)
+kg   1
+lbm  0.453592374
+lb_m  0.453592374
+g    0.001
+ton  907.184749
+grain 6.4799e-5
+mg 1e-6
+oz 0.028349523
+ozm 0.028349523
+slug  14.593881
+stone 6.350293236
+amu 1.660531E-27
+µg 1e-9
+microgram 1e-9
+mt   1000
+tonne 1000
+
+$Moles (N)
+kgmole 1
+kgmol  1
+kmole  1
+kmol   1
+lbmole 0.453592374
+lbmol  0.453592374
+gmole  0.001
+gmol   0.001
+mole   0.001
+mol    0.001
+
+$Time (T)
+s 1
+sec  1
+second  1
+min 60
+minute 60
+h  3600
+hr 3600
+hour 3600
+day 86400
+days 86400
+week 604800
+weeks 604800
+fortnight 1.2096E6
+year 31.556952E6
+yr 31.556952E6
+years 31.556952E6
+millisec 1e-3
+µsec 1e-6
+microsec 1e-6
+
+$Frequency (1/T)
+cps 1
+cpm 0.016666667
+Bq  1
+ci  3.7e10
+Hz  1
+
+$Temperature (D)
+K 1
+C 1
+R 0.55555556
+F 0.55555556
+°C 1
+°F 0.55555556
+
+$Temp. Difference (D)
+DELTAK 1
+DELTAC 1
+DELTAF 0.55555556
+DELTAR 0.55555556
+
+$Velocity (L/T)
+mph 0.44704
+knot 0.51444
+m/s 1
+km/s 0.001
+ft/s 0.3048
+kph 0.2777778
+km/h 0.2777778
+
+
+$Area (L^2)
+acre 4046.856
+hectare 10000
+barn 1e-28
+
+$Volume (L^3)
+gal 0.0037854118
+gallon 0.0037854118
+l   0.001
+Bu  3.523007016688e-2
+ml  1e-6
+milliliter 1e-6
+µl 1e-9
+microliter 1e-9
+liter 0.001
+quart 0.0009463264
+oz 2.9572702e-5
+ozv 2.9572702e-5
+pint 0.000473163
+bbl 0.1589873
+
+$Volumetric flow (L^3/T)
+cfm 0.47194744E-3
+gph 1.051503E-6
+gpm 6.30902E-5
+
+$Force (M-L/T^2)
+N 1
+kN 1000
+lbf 4.448222
+lb_f 4.448222
+dyne 1E-5
+kgf 9.80665
+kg_f 9.80665
+
+$Pressure (M/L-T^2)
+Pa 1
+milliPa 1E-3
+microPa 1E-6
+µPa 1E-6
+kPa 1000
+MPa 1E6
+GPa 1E9
+gigaPa 1E9
+bar 1E5
+milliBar 1E2
+atm 1.01325E5
+psia 6894.75788958
+psi 6894.75788958
+ksi 6894757.88958
+psig 6894.75788958
+psf 47.88055555
+mmH2O 9.80665
+mH2O 9806.65
+mmHg 133.3224
+inHg 3386.388
+torr 133.3224
+inH2O 249.088
+in.H2O 249.088
+ftH2O 2989.057
+
+$Energy (M-L^2/T^2)
+J   1
+milliJ 1E-3
+kJ  1000
+MJ   1E6
+Wh   3.6E3
+Whr  3.6E3
+kWh  3.6E6
+kWhr 3.6E6
+MWh  3.6e9
+MWhr  3.6e9
+GWh  3.6e12
+GWhr  3.6e12
+GJ  1E9
+Btu 1055.056
+MBtu  1055056000.0
+MMBtu 1055056000.0
+kBtu 1055056.0
+cal 4.1868
+kcal 4186.8
+erg 1E-7
+ev  1.60207E-19
+eV 1.60207E-19
+keV 1.60207E-16
+kev 1.60207E-16
+mev 1.60207E-13
+meV 1.60207E-13
+bev 1.60207E-10
+beV 1.60207E-10
+therm 105505600
+therms 105505600
+quad 1.055056e18
+quads 1.055056e18
+
+$Power (M-L^2/T^3)
+W 1
+hp  745.700
+ton 3516.852
+tons 3516.852
+microW  1E-6
+milliW  1E-3
+kW 1000
+MW 1E6
+MegaW 1E6
+gW 1E9
+gigaW 1E9
+
+$Viscosity-dynamic (M/L-T)
+poise 0.1
+centipoise 0.001
+micropoise 1E-7
+cp  0.001
+Reyn  6894.7
+
+$Viscosity-kinematic (L^2/T)
+Stoke 1E-4
+centiStoke 1E-6
+
+$Angles (A)
+radian 1
+radians 1
+rad 1
+deg 0.017453293
+degree 0.017453293
+degrees 0.017453293
+°    0.017453293
+rev  6.28318530718
+revs 6.28318530718
+revolutions  6.28318530718
+minute 2.90888E-4
+quadrant 1.5707963
+cycle   6.28318530718
+cycles 6.28318530718
+
+$Charge (C)
+Coulomb 1
+Faraday 96517.844
+Abcoulomb 10
+
+$Electrical Capacitance (C^2-T^2/M-L^2)
+Farad 1
+pFarad 1E-12
+pF 1E-12
+
+$Dipole Moment (C-L)
+Debye 3.33564e-30
+
+$Current (C/T)
+Amp 1
+Ampere 1
+A    1
+
+$Electrical Resistance (M-L^2/T-C^2)
+ohm 1
+kohm 1000
+
+$Electromotive Force (M-L^2/T^2-C)
+Volt 1
+millivolt 0.001
+kV   1000
+MegaVolt 1E6
+v  1
+
+$Inductance (M-L^2/C^2)
+Henry 1
+
+$Cost ($)
+#$     1
+cents  0.01
+
+$Non Dimensional ( )
+-          1
+space      1
+Percent    0.01
+%          0.01
+person     1
+persons    1
+ppm        1e-6
+ppb        1e-9 
+any        1 
+
+$Magnetic Flux Density (M/T-C)
+Gauss 1E-4
+G         1E-4
+Tesla  1
+T         1
+
+$Magnetic Flux (M-L^2/T-C)
+Maxwell 1E-8
+Mx          1E-8
+Weber   1
+Wb         1
+
+$Magnetic Field Strength (C/T-L)
+Oersted  79.5774715459
+Oe  79.5774715459
+
+$Illuminance (I)
+lm  1
+
+$Illuminance flux (I/L^2)
+lux  1
+ftcndl 10.763910417
+mcndl 1
+
+}

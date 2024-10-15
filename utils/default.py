@@ -7,6 +7,8 @@ import timeago as timesince
 from collections import namedtuple
 from io import BytesIO
 
+from discord.ext import commands
+
 
 def get(file):
     try:
@@ -52,6 +54,13 @@ def actionmessage(case, mass=False):
         output = f"**{case}** the IDs/Users"
 
     return f"✅ Successfully {output}"
+
+
+
+class Error(commands.CommandError):
+    def __init__(self, message, **kwargs):
+        super().__init__(message)
+        self.kwargs = kwargs
 
 
 async def prettyResults(ctx, filename: str = "Results", resultmsg: str = "Here's the results:", loop=None):

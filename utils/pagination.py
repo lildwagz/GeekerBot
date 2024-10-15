@@ -70,8 +70,20 @@ class EmbedPaginator(Dialog):
             try:
                 reaction, user = await self._client.wait_for('reaction_add', check=check, timeout=100)
             except asyncio.TimeoutError:
-                if not isinstance(channel, discord.channel.DMChannel) and not isinstance(channel, discord.channel.GroupChannel):
-                    await self.message.clear_reactions()
+                try:
+                    if not isinstance(channel, discord.channel.DMChannel) and not isinstance(channel, discord.channel.GroupChannel):
+                        try:
+                            await self.message.clear_reactions()
+                        except discord.errors.Forbidden:
+                            await self.message.edit(
+                                comtent="`error: I'm missing required discord permission [ manage massages or emoji reactions ]`"
+                                )
+                        except Exception as e:
+                            pass
+
+                except discord.errors.Forbidden:
+                    await self.message.edit(comtent="`error: I'm missing required discord permission [ manage messages ]`"
+                    )
                 return
 
             emoji = reaction.emoji
@@ -96,7 +108,11 @@ class EmbedPaginator(Dialog):
 
             await self.message.edit(embed=self.formatted_pages[load_page_index])
             if not isinstance(channel, discord.channel.DMChannel) and not isinstance(channel, discord.channel.GroupChannel):
-                await self.message.remove_reaction(reaction, user)
+                try:
+                    await self.message.remove_reaction(reaction, user)
+                except discord.errors.Forbidden:
+                    await self.message.edit(content="`error: I'm missing required discord permission [ manage messages ]`")
+
 
             current_page_index = load_page_index
 

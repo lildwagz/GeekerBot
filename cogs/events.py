@@ -1,35 +1,92 @@
+import asyncio
 import json
 import random
-import re
-import sys
-from os import path
 
+import arrow
 import discord
 import psutil
 import os
-import asyncio
 
 from datetime import datetime
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import errors
 
-from cogs.mod2 import color_list
-from utils import default, lists
-from better_profanity import profanity
+# from cogs.func.cleverbot import chatbot_response_b
+from utils import default, utilss
+
+step = 0
+chat_history_ids = []
 
 
 class Events(commands.Cog):
+    """A tons of Utility commands"""
     def __init__(self, bot):
         self.bot = bot
         self.config = default.get("config.json")
         self.process = psutil.Process(os.getpid())
+        self.guildid = []
+        self.statuses = [
+            ("watching", lambda: f"{len(self.bot.guilds)} servers"),
+            ("listening", lambda: f"{len(set(self.bot.get_all_members()))} users"),
+            ("playing", lambda: "gabutcodex.tk"),
+        ]
+        self.activities = {"playing": 0, "streaming": 1, "listening": 2, "watching": 3}
+        self.current_status = None
+        self.status_loop.start()
+        self.logcommand = 800650161020993586
+        self.message_levels = {
+            "info": {
+                "description_prefix": ":information_source:",
+                "color": int("3b88c3", 16),
+                "help_footer": False,
+            },
+            "warning": {
+                "description_prefix": ":warning:",
+                "color": int("ffcc4d", 16),
+                "help_footer": False,
+            },
+            "error": {
+                "description_prefix": ":no_entry:",
+                "color": int("be1931", 16),
+                "help_footer": False,
+            },
+            "cooldown": {
+                "description_prefix": ":hourglass_flowing_sand:",
+                "color": int("ffe8b6", 16),
+                "help_footer": False,
+            }
+        }
+
+    async def send(self, ctx, level, message, help_footer=None, codeblock=False, **kwargs):
+        """Send error message to chat."""
+        settings = self.message_levels.get(level)
+        if codeblock:
+            message = f"`{message}`"
+
+        embed = discord.Embed(
+            color=settings["color"], description=f"{settings['description_prefix']} {message}"
+        )
+
+        help_footer = help_footer or settings["help_footer"]
+        if help_footer:
+            embed.set_footer(text=f"Learn more: {ctx.prefix}help {ctx.command.qualified_name}")
+
+        try:
+            await ctx.send(embed=embed, **kwargs)
+        except discord.errors.Forbidden:
+            self.bot.logger.warning("Forbidden when trying to send error message embed")
+
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
         if isinstance(err, errors.MissingRequiredArgument) or isinstance(err, errors.BadArgument):
             helper = str(ctx.invoked_subcommand) if ctx.invoked_subcommand else str(ctx.command)
             await ctx.send_help(helper)
+
+        elif isinstance(err, commands.MissingPermissions):
+            perms = ", ".join(f"**{x}**" for x in err.missing_perms)
+            await utilss.send_error_message(ctx, f"You require {perms} permission to use this command!")
 
         elif isinstance(err, errors.CommandInvokeError):
             error = default.traceback_maker(err.original)
@@ -54,34 +111,49 @@ class Events(commands.Cog):
         elif isinstance(err, errors.CommandNotFound):
             pass
 
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        if not self.config.join_message:
-            return
+        elif isinstance(err, commands.errors.MaxConcurrencyReached):
+            await ctx.send("Stop spamming! You are really bad(")
 
-        try:
-            to_send = sorted([chan for chan in guild.channels if
-                              chan.permissions_for(guild.me).send_messages and isinstance(chan, discord.TextChannel)],
-                             key=lambda x: x.position)[0]
-        except IndexError:
-            pass
-        else:
-            await to_send.send(self.config.join_message)
+
+
+
 
     @commands.Cog.listener()
     async def on_command(self, ctx):
+        logchannel = self.bot.get_channel(self.logcommand)
+        content = discord.Embed(color=discord.Color.green())
+        content.title = "LOGG COMMAND"
+        content.timestamp = arrow.utcnow().datetime
+
         try:
+            content.description = (
+                f"{ctx.guild.name} > {ctx.author} > {ctx.message.clean_content}"
+            )
+            content.set_thumbnail(url=ctx.guild.icon_url)
+            content.set_footer(text=f"{ctx.guild.name}")
+
+            await logchannel.send(embed=content)
+
             print(f"{ctx.guild.name} > {ctx.author} > {ctx.message.clean_content}")
+
         except AttributeError:
+            content.description = (
+                f"Private message > {ctx.author} > {ctx.message.clean_content}"
+            )
+            content.set_footer(text=f"{ctx.author}")
+            content.set_thumbnail(url=str(ctx.author.avatar_url_as(format='gif' if ctx.author.is_avatar_animated() is True else 'png')))
+            await logchannel.send(embed=content)
+
             print(f"Private message > {ctx.author} > {ctx.message.clean_content}")
 
     @commands.Cog.listener()
     async def on_ready(self):
         """ The function that activates when boot was completed """
-        if not hasattr(self.bot, 'uptimes'):
+        if not hasattr(self.bot, 'uptime'):
             self.bot.uptime = datetime.utcnow()
 
         status = self.config.status_type.lower()
+        status_activity = f" {len(self.bot.users)} users | {len(self.bot.guilds)} servers"
         status_type = {"idle": discord.Status.idle, "dnd": discord.Status.dnd}
 
         activity = self.config.activity_type.lower()
@@ -89,11 +161,13 @@ class Events(commands.Cog):
 
         await self.bot.change_presence(
             activity=discord.Game(
-                type=activity_type.get(activity, 0), name=self.config.activity
+                type=activity_type.get(activity, 2), name=status_activity
             ),
-            status=status_type.get(status, discord.Status.online)
+            status=status_type.get(status, discord.Status.dnd)
         )
+
         # Indicate that the bot has successfully booted up
+
         print(f'Ready: {self.bot.user} | Servers: {len(self.bot.guilds)}')
 
     def load_captchas(self):
@@ -104,147 +178,35 @@ class Events(commands.Cog):
         with open('Databases/captcha/captchas.json', 'w') as outfile:
             json.dump(captchas, outfile)
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        whitelisted_roles = [771035451128938506]
-        with open("config.json", "r") as con:
-            config = json.load(con)
-            antiSpam = config["antiSpam"]
-            allowSpam = config["allowSpam"]
-            antitoxic = config["antitoxic"]
-            captcha = config["captcha"]
-            antiLinks = config["antiLinks"]
-        if message.author.bot:
-            return
 
-        if antitoxic or antiLinks:
-            if self.config.SkipBots and message.author.bot:
-                return None
-            for role in message.author.roles:
-                if role.id in whitelisted_roles:
-                    return None
-            regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([" \
-                    r"^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’])) "
+    @tasks.loop(minutes=3.0)
+    async def status_loop(self):
+        try:
+            await self.next_status()
+        except Exception as e:
+            # logger.error(e)
+            print(e)
 
-            url = re.findall(regex, message.content)
-            detect = ([x[0] for x in url])
-            censored = profanity.censor(message.content)
+    @status_loop.before_loop
+    async def before_status_loop(self):
+        await self.bot.wait_until_ready()
+        await asyncio.sleep(30)  # avoid rate limit from discord in case of rapid reconnect
+        # print("Starting status loop")
 
-            embed = discord.Embed(title=f'**{message.author}** has been warned!',
-                                  description=f'**Reason**: Using blacklisted content\n**Content**: ||{message.content}||',
-                                  color=0x0fa7d0)
-            embed.set_thumbnail(url=message.author.avatar_url)
+    async def next_status(self):
+        """switch to the next status message."""
+        new_status_id = self.current_status
+        while new_status_id == self.current_status:
+            new_status_id = random.randrange(0, len(self.statuses))
 
-            if profanity.contains_profanity(message.content) and antitoxic:
-                await message.delete()
-                await message.channel.send(embed=embed, delete_after=10)
-            elif detect and antiLinks:
-                await message.delete()
-                await message.channel.send(embed=embed, delete_after=10)
+        status = self.statuses[new_status_id]
+        self.current_status = new_status_id
 
-
-        if antiSpam:
-            warnerName = "GeekerBot"
-            warnerId = 772748636554788895
-            color = random.choice(color_list)
-
-            def check(message):
-                return message.author == message.author and (datetime.utcnow() - message.created_at).seconds < 15
-
-            try:
-                if message.author.guild_permissions.administrator:
-                    return
-
-                if message.channel.id in allowSpam:
-                    return
-
-                if len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 9 and len(
-                        list(filter(lambda m: check(m), self.bot.cached_messages))) < 12:
-                    await message.channel.send(f"{message.author.mention} don't do that bruh!")
-                elif len(list(filter(lambda m: check(m), self.bot.cached_messages))) >= 14 \
-                        :
-                    dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                    if not os.path.exists("Databases/warns/" + str(message.guild.id) + "/"):
-                        os.makedirs("Databases/warns/" + str(message.guild.id) + "/")
-                    try:
-                        with open(f"Databases/warns/{str(message.guild.id)}/{str(message.author.id)}.json") as f:
-                            data = json.load(f)
-                            warn_amount = data.get("warns")
-                            new_warn_amount = warn_amount + 1
-                            data["warns"] = new_warn_amount
-                            data["offender_name"] = message.author.name
-                            new_warn = ({
-                                'warner': self.bot.user.id,
-                                'warner_name': self.bot.user.name,
-                                'reason': "spamming",
-                                'channel': str(message.channel.id),
-                                'datetime': dt_string
-                            })
-                            data[new_warn_amount] = new_warn
-                            if warn_amount == 3:
-                                reason = "spamming multiple times"
-                                muted_role = next((g for g in message.guild.roles if g.name == "Muted"), None)
-                                try:
-                                    await message.author.add_roles(muted_role, reason=reason)
-                                    await message.channel.send(
-                                        f"<@{message.author.id}> has been muted by <@{warnerId}> for *{reason}*")
-                                except Exception as e:
-                                    await message.channel.send(e)
-                            else:
-                                json.dump(data, open(
-                                    f"Databases/warns/{str(message.guild.id)}/{str(message.author.id)}.json", "w"))
-                                embed = discord.Embed(title=f"{message.author.name}'s new warn", color=color)
-                                embed.add_field(
-                                    name=f"Warn  {new_warn_amount}",
-                                    value=f"Warner: {warnerName} (<@{warnerId}>)\nReason: spamming\nChannel: <#{str(message.channel.id)}>\nDate and Time: {dt_string}",
-                                    inline=True
-                                )
-                                await message.channel.send(
-                                    content="Successfully added new warn.",
-                                    embed=embed
-                                )
-
-                    except FileNotFoundError:
-
-                        with open(f"Databases/warns/{str(message.guild.id)}/{str(message.author.id)}.json", "w") as f:
-                            data = ({
-                                'offender_name': message.author.name,
-                                'warns': 1,
-                                1: ({
-                                    'warner': warnerId,
-                                    'warner_name': warnerName,
-                                    'reason': "spamming",
-                                    'channel': str(message.channel.id),
-                                    'datetime': dt_string
-                                })
-                            })  #
-                            json.dump(data, f)
-                        embed = discord.Embed(title=f"{message.author.name}'s new warn",
-                                              color=random.choice(color_list))
-                        embed.add_field(
-                            name="Warn 1",
-                            value=f"Warner: {warnerName} (<@{warnerId}>)\nReason: Spamming\nChannel: <#{str(message.channel.id)}>\nDate and Time: {dt_string}",
-                            inline=True
-                        )
-                        await message.channel.send(
-                            content="Successfully added new warn.",
-                            embed=embed
-                        )
-                        return
-                    # embed = discord.Embed(
-                    #     title=f"**YOU HAVE BEEN KICKED FROM {message.author.guild.name}**",
-                    #     description=f"Reason : You spammed.", color=0xff0000)
-                    # await message.author.send(embed=embed)
-                    # # await message.author.kick()  # Kick the user
-                    # await message.channel.send(
-                    #     f"{message.author.mention} hell yeah this dude has no chill !")
-
-            except:
-                pass
-
-        if captcha:
-            pass
-
+        await self.bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType(self.activities[status[0]]), name=status[1]()
+            )
+        )
 
     # @commands.Cog.listener()
     # async def on_member_join(self, member):
@@ -257,5 +219,37 @@ class Events(commands.Cog):
     #     await chanel.send(file=discord.File("Databases/captcha/" + file))
 
 
+
 def setup(bot):
     bot.add_cog(Events(bot))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
